@@ -4,19 +4,19 @@
         <div class="ava_box">
         <img src="../assets/logo.png">
         </div>
-        <el-form :model="loginFrom" :rules="loginFromRules" label-width="0px" class="login_from">
+        <el-form :model="loginFrom" ref="loginFromRef" :rules="loginFromRules" label-width="0px" class="login_from">
         <!--用戶名-->
-            <el-form-item prop="loginFromRules.username">
+            <el-form-item prop="username">
                 <el-input v-model="loginFrom.username"  prefix-icon="el-icon-user"></el-input>
             </el-form-item>
              <!--密碼-->
-            <el-form-item prop="loginFromRules.password">
-                <el-input v-model="loginFrom.passwrod" type="password" prefix-icon="el-icon-goods"></el-input>
+            <el-form-item prop="password">
+                <el-input v-model="loginFrom.password" prefix-icon="el-icon-goods"></el-input>
             </el-form-item>
              <!--按鈕-->
             <el-form-item class="btn_s">
-                <el-button type="primary">登錄</el-button>
-                <el-button type="info">重置</el-button>
+                <el-button type="primary" @click="login">登錄</el-button>
+                <el-button type="info" @click="rest">重置</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -32,10 +32,29 @@ export default {
       },
       loginFromRules: {
         username: [
+          { required: true, message: '請輸入用戶名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         password: [
+          { required: true, message: '請輸入密碼', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    rest () {
+      this.$refs.loginFromRef.resetFields()
+    },
+    login () {
+      this.$refs.loginFromRef.validate(async valid => {
+        if (!valid) {
+          return
+        }
+        const { data: res } = await this.$http.post('login', this.loginFrom)
+        if (res.meta.status !== 200) return console.log('登錄失敗')
+        console.log('dengdu')
+      })
     }
   }
 }
