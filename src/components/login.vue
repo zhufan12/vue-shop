@@ -54,7 +54,7 @@ export default {
         const { data: res } = await this.$http.post('login', this.loginFrom)
         if (res.meta.status !== 200) return this.$message.error('登錄失敗')
         this.$message.success('登錄成功')
-        window.sessionStorage('token', res.data.token)
+        window.sessionStorage.setItem('token', res.data.token)
         this.$router.push('home')
       })
     }
