@@ -11,7 +11,7 @@
             </el-form-item>
              <!--密碼-->
             <el-form-item prop="password">
-                <el-input v-model="loginFrom.password" prefix-icon="el-icon-goods"></el-input>
+                <el-input v-model="loginFrom.password" type="password" prefix-icon="el-icon-goods"></el-input>
             </el-form-item>
              <!--按鈕-->
             <el-form-item class="btn_s">
@@ -52,8 +52,10 @@ export default {
           return
         }
         const { data: res } = await this.$http.post('login', this.loginFrom)
-        if (res.meta.status !== 200) return console.log('登錄失敗')
-        console.log('dengdu')
+        if (res.meta.status !== 200) return this.$message.error('登錄失敗')
+        this.$message.success('登錄成功')
+        window.sessionStorage('token', res.data.token)
+        this.$router.push('home')
       })
     }
   }
