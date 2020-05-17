@@ -10,16 +10,19 @@
       background-color="#333744"
       text-color="#fff"
       active-text-color="#409eff"
-      :unique-opened="true">
+      :unique-opened="true"
+      :router="true"
+      :default-active="activepath"
+      >
       <!--一級菜單-->
-      <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
+      <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id" >
       <!--一級菜單模板-->
         <template slot="title">
           <i :class="iconobj[item.id]"></i>
           <span>{{ item.authName }}</span>
         </template>
         <!--二級菜單-->
-         <el-menu-item :index="subitem.id + ''" v-for="subitem in item.children" :key="subitem.id">
+         <el-menu-item @click="saveNavpath('/' + subitem.path)" :index="'/' + subitem.path + ''" v-for="subitem in item.children" :key="subitem.id">
          <template slot="title">
           <i class="el-icon-menu"></i>
           <span>{{ subitem.authName}}</span>
@@ -45,11 +48,13 @@ export default {
         101: 'iconfont icon-shangpin',
         102: 'iconfont icon-danju',
         145: 'iconfont icon-baobiao'
-      }
+      },
+      activepath: ''
     }
   },
   created() {
     this.getMenuList()
+    this.activepat = window.sessionStorage.getItem('activepath')
   },
   methods: {
     logout() {
@@ -61,6 +66,10 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.menulist = res.data
       console.log(res.data)
+    },
+    saveNavpath(activepath) {
+      window.sessionStorage.setItem('activepath', activepath)
+      this.activepath = activepath
     }
   }
 }
