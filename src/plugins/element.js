@@ -13,13 +13,19 @@ import {
   MenuItem,
   Submenu,
   Breadcrumb,
-  BreadcrumbItem
+  BreadcrumbItem,
+  Card,
+  Row,
+  Col
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/zh-TW'
 import locale from 'element-ui/lib/locale'
 
 locale.use(lang)
 
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Card)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
