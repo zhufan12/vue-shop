@@ -16,13 +16,25 @@ import {
   BreadcrumbItem,
   Card,
   Row,
-  Col
+  Col,
+  Table,
+  TableColumn,
+  Switch,
+  Tooltip,
+  Pagination,
+  Dialog
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/zh-TW'
 import locale from 'element-ui/lib/locale'
 
 locale.use(lang)
 
+Vue.use(Dialog)
+Vue.use(Pagination)
+Vue.use(Tooltip)
+Vue.use(Switch)
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Card)
