@@ -31,7 +31,7 @@
     </el-table-column>
     <el-table-column label="操作" width="180">
       <template>
-       <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+       <el-button type="primary" icon="el-icon-edit" size="mini" @click="showeidt"></el-button>
        <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
        <el-tooltip effect="dark" content="角色分配" :enterable="false" placement="top">
        <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
@@ -53,10 +53,11 @@
   title="填寫數據"
   :visible.sync="dialogVisible"
   width="50%"
+  @close="closeadd"
   >
   <span>
   <el-form :model="addFrom" :rules="addFromrules" ref="addFromref" label-width="70px" class="demo-ruleForm">
-  <el-form-item label="用戶名稱" prop="username">
+  <el-form-item label="用戶名" prop="username">
     <el-input v-model="addFrom.username"></el-input>
   </el-form-item>
   <el-form-item label="密碼" prop="password">
@@ -65,11 +66,37 @@
   <el-form-item label="郵箱" prop="email">
     <el-input v-model="addFrom.email"></el-input>
   </el-form-item>
+   <el-form-item label="手機" prop="mobile">
+    <el-input v-model="addFrom.mobile"></el-input>
+  </el-form-item>
   </el-form>
   </span>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">添加</el-button>
+    <el-button type="primary" @click="adduser()">添加</el-button>
+  </span>
+</el-dialog>
+<el-dialog
+  title="修改用戶資料"
+  :visible.sync="editshow"
+  width="50%"
+  >
+  <span>
+  <el-form ref="editfronref" :model="editfrom" :rules="addFromrules" label-width="80px">
+  <el-form-item label="用戶名">
+    <el-input :disabled="true"></el-input>
+  </el-form-item>
+  <el-form-item label="郵箱" prop="email">
+    <el-input v-model="editfrom.email" :disabled="true"></el-input>
+  </el-form-item>
+  <el-form-item label="手機" prop="mobile">
+    <el-input v-model="editfrom.mobile" :disabled="true"></el-input>
+  </el-form-item>
+   </el-form>
+  </span>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="editshow = false">取 消</el-button>
+    <el-button type="primary" @click="editshow = false">确 定</el-button>
   </span>
 </el-dialog>
  </div>
@@ -77,6 +104,20 @@
 <script>
 export default {
   data() {
+    var chenckemail = (rule, value, cd) => {
+      const regemual = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      if (regemual.test(value)) {
+        return cd()
+      }
+      cd(new Error('請輸入正確的郵箱'))
+    }
+    var chenckmobli = (rule, value, cd) => {
+      const re = /^1[3456789]\d{9}$/
+      if (re.test(value)) {
+        return cd()
+      }
+      cd(new Error('請輸入正確的手機'))
+    }
     return {
       querif: {
         query: '',
@@ -86,10 +127,16 @@ export default {
       userlist: [],
       total: 0,
       dialogVisible: false,
+      editshow: false,
       addFrom: {
         username: '',
         password: '',
-        email: ''
+        email: '',
+        mobile: ''
+      },
+      editfrom: {
+        email: '',
+        mobile: ''
       },
       addFromrules: {
         username: [
@@ -102,7 +149,11 @@ export default {
         ],
         email: [
           { required: true, message: '請輸入郵箱', trigger: 'blur' },
-          { type: email, message: '郵箱格式錯誤', trigger: 'blur' }
+          { validator: chenckemail, trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '請輸入手機號碼', trigger: 'blur' },
+          { validator: chenckmobli, trigger: 'blur' }
         ]
       }
     }
@@ -133,10 +184,31 @@ export default {
         return this.$message.error('更新失敗！')
       }
       this.$message.success('更新成功')
+    },
+    closeadd() {
+      this.$refs.addFromref.resetFields()
+    },
+    adduser() {
+      this.$refs.addFromref.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.post('users', this.addFrom)
+
+        if (res.meta.status !== 200) {
+          this.$message.error('添加失敗')
+        }
+        this.$message.success('添加成功')
+        this.dialogVisible = false
+        this.getUserlist()
+      })
+    },
+    showeidt() {
+      this.editshow = true
     }
   }
 }
 </script>
 <style lang="less" scoped>
-
+  .el-form-item{
+    font-size: 12px;
+  }
 </style>

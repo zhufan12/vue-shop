@@ -19,3 +19,6 @@ body,
 .el-pagination{
     margin-top: 15px;
 }
+.el-dialog{
+    font-size: 12px !important;
+}
