@@ -30,11 +30,11 @@
       </template>
     </el-table-column>
     <el-table-column label="操作" width="180">
-      <template>
-       <el-button type="primary" icon="el-icon-edit" size="mini" @click="showeidt"></el-button>
-       <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+      <template slot-scope="scoped">
+       <el-button type="primary" icon="el-icon-edit" size="mini" @click="showeidt(scoped.row.id)"></el-button>
+       <el-button type="danger" icon="el-icon-delete" size="mini" @click="deluser(scoped.row.id)"></el-button>
        <el-tooltip effect="dark" content="角色分配" :enterable="false" placement="top">
-       <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+       <el-button type="warning" icon="el-icon-setting" size="mini" ></el-button>
        </el-tooltip>
       </template>
     </el-table-column>
@@ -80,23 +80,24 @@
   title="修改用戶資料"
   :visible.sync="editshow"
   width="50%"
+  @close="editclose"
   >
   <span>
   <el-form ref="editfronref" :model="editfrom" :rules="addFromrules" label-width="80px">
   <el-form-item label="用戶名">
-    <el-input :disabled="true"></el-input>
+    <el-input :disabled="true" v-model="editfrom.username"></el-input>
   </el-form-item>
   <el-form-item label="郵箱" prop="email">
-    <el-input v-model="editfrom.email" :disabled="true"></el-input>
+    <el-input v-model="editfrom.email" ></el-input>
   </el-form-item>
   <el-form-item label="手機" prop="mobile">
-    <el-input v-model="editfrom.mobile" :disabled="true"></el-input>
+    <el-input v-model="editfrom.mobile"></el-input>
   </el-form-item>
    </el-form>
   </span>
   <span slot="footer" class="dialog-footer">
     <el-button @click="editshow = false">取 消</el-button>
-    <el-button type="primary" @click="editshow = false">确 定</el-button>
+    <el-button type="primary" @click="editsubm">确 定</el-button>
   </span>
 </el-dialog>
  </div>
@@ -134,10 +135,7 @@ export default {
         email: '',
         mobile: ''
       },
-      editfrom: {
-        email: '',
-        mobile: ''
-      },
+      editfrom: {},
       addFromrules: {
         username: [
           { required: true, message: '請輸入用戶名', trigger: 'blur' },
@@ -201,8 +199,49 @@ export default {
         this.getUserlist()
       })
     },
-    showeidt() {
+    async showeidt(id) {
+      const { data: res } = await this.$http.get('users/' + id)
+      if (res.meta.status !== 200) {
+        return this.$message.error('請求失敗')
+      }
+      this.editfrom = res.data
       this.editshow = true
+    },
+    editsubm() {
+      this.$refs.editfronref.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.put('users/' + this.editfrom.id, {
+          email: this.editfrom.email,
+          mobile: this.editfrom.mobile
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('修改失敗')
+        }
+        this.editshow = false
+        this.getUserlist()
+        this.$message.success('修改成功')
+      })
+    },
+    editclose() {
+      this.$refs.editfronref.resetFields()
+    },
+    async deluser(id) {
+      const rest = await this.$confirm('此操作将永久删除该用戶, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).catch(err => err) // 這裏是個簡寫  （err =>{ return err }）
+      if (rest !== 'confirm') {
+        return this.$message.info('已取消操作')
+      } // 這裏是用戶按下取消按鈕后的操作
+      const { data: res } = await this.$http.delete('users/' + id)
+      if (res.meta.status !== 200) {
+        return this.$message.error('刪除失敗')
+      }
+      this.$message.success('刪除成功')
+      this.pagenum = 1
+      this.getUserlist()
     }
   }
 }
