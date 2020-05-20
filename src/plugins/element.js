@@ -24,7 +24,10 @@ import {
   Pagination,
   Dialog,
   MessageBox,
-  Tag
+  Tag,
+  tree,
+  Select,
+  Option
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/zh-TW'
 import locale from 'element-ui/lib/locale'
@@ -54,5 +57,8 @@ Vue.use(MenuItem)
 Vue.use(Submenu)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(tree)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

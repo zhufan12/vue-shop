@@ -34,7 +34,7 @@
        <el-button type="primary" icon="el-icon-edit" size="mini" @click="showeidt(scoped.row.id)"></el-button>
        <el-button type="danger" icon="el-icon-delete" size="mini" @click="deluser(scoped.row.id)"></el-button>
        <el-tooltip effect="dark" content="角色分配" :enterable="false" placement="top">
-       <el-button type="warning" icon="el-icon-setting" size="mini" ></el-button>
+       <el-button type="warning" icon="el-icon-setting" size="mini" @click="setRoles(scoped.row)"></el-button>
        </el-tooltip>
       </template>
     </el-table-column>
@@ -100,6 +100,30 @@
     <el-button type="primary" @click="editsubm">确 定</el-button>
   </span>
 </el-dialog>
+<el-dialog
+  title="分配角色"
+  :visible.sync="setrolesfromshow"
+  width="50%"
+  @close="resetrolesform"
+  >
+  <div>
+  <p>當前用戶名：{{ userinfo.username }}</p>
+  <p>當前的角色：{{ userinfo.role_name }}</p>
+  <el-select v-model="selectid" placeholder="请选择">
+    <el-option
+      v-for="item in roleslist"
+      :key="item.id"
+      :label="item.roleName"
+      :value="item.id">
+    </el-option>
+  </el-select>
+  </div>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="setrolesfromshow = false">取 消</el-button>
+    <el-button type="primary" @click="saveRole()">确 定</el-button>
+  </span>
+</el-dialog>
+
  </div>
 </template>
 <script>
@@ -136,6 +160,10 @@ export default {
         mobile: ''
       },
       editfrom: {},
+      setrolesfromshow: false,
+      userinfo: '',
+      roleslist: '',
+      selectid: '',
       addFromrules: {
         username: [
           { required: true, message: '請輸入用戶名', trigger: 'blur' },
@@ -165,7 +193,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error('SHIBAI')
       this.userlist = res.data.users
       this.total = res.data.total
-      console.log(res)
+      // console.log(res)
     },
     handleSizeChange(newsizepage) {
       this.querif.pagesize = newsizepage
@@ -242,6 +270,34 @@ export default {
       this.$message.success('刪除成功')
       this.pagenum = 1
       this.getUserlist()
+    },
+    async setRoles(userif) {
+      this.userinfo = userif
+      // 獲取所有角色的列表
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('獲取角色列表失敗')
+      }
+      this.roleslist = res.data
+      this.setrolesfromshow = true
+    },
+    async saveRole() {
+      if (!this.selectid) {
+        return this.$message.error('請選擇角色')
+      }
+      const { data: res } = await this.$http.put(`users/${this.userinfo.id}/role`, {
+        rid: this.selectid
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('更新失敗')
+      }
+      this.$message.success('更新成功')
+      this.getUserlist()
+      this.setrolesfromshow = false
+    },
+    resetrolesform() {
+      this.selectid = ''
+      this.userinfo = ''
     }
   }
 }
