@@ -27,7 +27,8 @@ import {
   Tag,
   tree,
   Select,
-  Option
+  Option,
+  Cascader
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/zh-TW'
 import locale from 'element-ui/lib/locale'
@@ -59,6 +60,7 @@ Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Cascader)
 Vue.use(tree)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
