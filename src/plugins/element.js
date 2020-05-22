@@ -36,13 +36,17 @@ import {
   TabPane,
   CheckboxGroup,
   Checkbox,
-  Upload
+  Upload,
+  Timeline,
+  TimelineItem
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/zh-TW'
 import locale from 'element-ui/lib/locale'
 
 locale.use(lang)
 
+Vue.use(TimelineItem)
+Vue.use(Timeline)
 Vue.use(Upload)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
