@@ -29,13 +29,27 @@ import {
   Select,
   Option,
   Cascader,
-  Alert
+  Alert,
+  Steps,
+  Step,
+  Tabs,
+  TabPane,
+  CheckboxGroup,
+  Checkbox,
+  Upload
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/zh-TW'
 import locale from 'element-ui/lib/locale'
 
 locale.use(lang)
 
+Vue.use(Upload)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Step)
+Vue.use(Steps)
 Vue.use(Alert)
 Vue.use(Tag)
 Vue.use(Dialog)
