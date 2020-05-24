@@ -1,24 +1,23 @@
-# vue_shop
+ ━━━━━━神兽出沒━━━━━━
+* 　　 ┏┓     ┏┓
+* 　　┏┛┻━━━━━┛┻┓
+* 　　┃　　　　　 ┃
+* 　　┃　　━　　　┃
+* 　　┃　┳┛　┗┳  ┃
+* 　　┃　　　　　 ┃
+* 　　┃　　┻　　　┃
+* 　　┃　　　　　 ┃
+* 　　┗━┓　　　┏━┛　Code is far away from bug with the animal protecting
+* 　　　 ┃　　　┃    
+* 　　　　┃　　　┃
+* 　　　　┃　　　┗━━━┓
+* 　　　　┃　　　　　　┣┓
+* 　　　　┃　　　　　　┏┛
+* 　　　　┗┓┓┏━┳┓┏┛
+* 　　　　 ┃┫┫ ┃┫┫
+* 　　　　 ┗┻┛ ┗┻┛
+保佑永無bug
 
-## Project setup
-```
-npm install
-```
+————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+vue電商後臺
